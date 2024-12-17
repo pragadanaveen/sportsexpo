@@ -1,0 +1,341 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/Ionicons";
+import FeedContent from "./FeedContent";
+import YourDashboard from "./YourDashboard";
+import MyBookings from "./MyBookings";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+const MyScreen = () => {
+  const [selectedTab, setSelectedTab] = useState("Your Dashboard");
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const tabs = ["Bookings", "Pending", "Cancelled"];
+
+  const sports = [
+    { name: "All", image: require("../assets/Badminton.png") },
+    { name: "Basketball", image: require("../assets/Badminton.png") },
+    { name: "Tennis", image: require("../assets/Badminton.png") },
+    { name: "Cricket", image: require("../assets/Badminton.png") },
+    { name: "Badminton", image: require("../assets/Badminton.png") },
+  ];
+
+  const handleDateConfirm = (date) => {
+    setSelectedDate(date);
+    setDatePickerVisibility(false);
+  };
+
+  const renderContent = () => {
+    switch (selectedTab) {
+      case "Bookings":
+        return <FeedContent />;
+      case "Pending":
+        return <YourDashboard />;
+      case "Cancelled":
+        return <MyBookings />;
+      default:
+        return (
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentTitle}>Tab Content</Text>
+            <Text style={styles.contentText}>
+              Content related to the {selectedTab} tab will appear here.
+            </Text>
+          </View>
+        );
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Top Bar */}
+      <View style={styles.topBar}>
+        <View style={styles.profileContainer}>
+          {/* Profile Picture */}
+          <Image
+            source={require("../assets/profile1.png")}
+            style={styles.profileImage}
+          />
+          {/* Area Name and City Name */}
+          <View style={styles.areaInfo}>
+            <Text style={styles.areaName}>Area Name</Text>
+            <Text style={styles.city}>City</Text>
+          </View>
+        </View>
+
+        {/* Notification Icon */}
+        <TouchableOpacity style={styles.iconButton}>
+          <Icon name="notifications-outline" size={24} color="#4CAF50" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Grounds and Tabs Section */}
+      <View style={styles.headerAndGroundsContainer}>
+        {/* Grounds Heading and Right Arrow */}
+        <View style={styles.groundsContainer}>
+          <Text style={styles.groundsTitle}>Grounds</Text>
+          <TouchableOpacity style={styles.arrowButton}>
+            <Icon name="chevron-forward" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Ground Photos in Circular Shape */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.groundPhotosContainer}
+        >
+          <View style={styles.groundPhoto}>
+            <Image source={require("../assets/ground.jpg")} style={styles.groundImage} />
+          </View>
+          <View style={styles.groundPhoto}>
+            <Image source={require("../assets/ground.jpg")} style={styles.groundImage} />
+          </View>
+          <View style={styles.groundPhoto}>
+            <Image source={require("../assets/ground.jpg")} style={styles.groundImage} />
+          </View>
+        </ScrollView>
+
+        {/* Sports Section */}
+        <View style={styles.sportsContainer}>
+          <Text style={styles.sportsTitle}>Popular Sports</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {sports.map((sport, index) => (
+              <View key={index} style={styles.sportItem}>
+                <Image source={sport.image} style={styles.sportImage} />
+                <Text style={styles.sportName}>{sport.name}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Tabs */}
+        <View style={styles.dashboardHeader}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.tabs}>
+              {tabs.map((tab) => (
+                <TouchableOpacity key={tab} onPress={() => setSelectedTab(tab)}>
+                  <View style={styles.tabContainer}>
+                    <Text
+                      style={[styles.tabText, selectedTab === tab && styles.selectedTab]}
+                    >
+                      {tab}
+                    </Text>
+                    {selectedTab === tab && <View style={styles.underline} />}
+                  </View>
+                </TouchableOpacity>
+              ))}
+              {/* Calendar Icon */}
+              <TouchableOpacity
+                style={styles.calendarButton}
+                onPress={() => setDatePickerVisibility(true)}
+              >
+                <Icon name="calendar-outline" size={20} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+          <View style={styles.horizontalRuler} />
+        </View>
+      </View>
+
+      {/* Content Area */}
+      <View style={styles.contentArea}>{renderContent()}</View>
+
+      {/* Date Picker Modal */}
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
+
+      {/* Selected Date */}
+      {selectedDate && (
+        <View style={styles.selectedDateContainer}>
+          {/* <Text style={styles.selectedDateText}>
+            Selected Date: {selectedDate.toLocaleDateString()}
+          </Text> */}
+        </View>
+      )}
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  topBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    backgroundColor: "#ffffff",
+  },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20, // Circular profile image
+  },
+  areaInfo: {
+    marginLeft: 10,
+  },
+  areaName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  city: {
+    fontSize: 14,
+    color: "#888",
+  },
+  iconButton: {
+    marginLeft: 15,
+  },
+  headerAndGroundsContainer: {
+    backgroundColor: "#ffffff",
+    padding: 15,
+  },
+  groundsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: 10,
+    alignItems: "center",
+  },
+  groundsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  arrowButton: {
+    marginLeft: 10,
+  },
+
+  // Styles for circular ground photos
+  groundPhotosContainer: {
+    paddingHorizontal: 8,
+    marginVertical: 10,
+  },
+  groundPhoto: {
+    marginRight: 15,
+  },
+  groundImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 40, // Circular image
+    resizeMode: "cover",
+  },
+
+  // Sports Section
+  sportsContainer: {
+    marginTop: 20,
+  },
+  sportsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  sportItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  sportImage: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
+  },
+  sportName: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#333",
+  },
+
+  // Styles for Tabs section
+  dashboardHeader: {
+    padding: 0, // No padding here
+    backgroundColor: "#ffffff",
+  },
+  tabs: {
+    flexDirection: "row",
+    paddingVertical: 10,
+    flex: 1, // Makes this section take available space
+  },
+  tabContainer: {
+    alignItems: "center",
+  },
+  tabText: {
+    fontSize: 16,
+    color: "black",
+    marginHorizontal: 20,
+  },
+  selectedTab: {
+    fontWeight: "bold",
+  },
+  underline: {
+    width: "80%",
+    height: 3,
+    backgroundColor: "blue",
+    marginTop: 7,
+  },
+  calendarButton: {
+    backgroundColor: "#4CAF50",  // Green background
+    width: 25,
+    height: 25,
+    borderRadius: 20, // Circular shape
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "17%",  // Space between tabs and the calendar icon
+  },
+  horizontalRuler: {
+    height: 1,
+    backgroundColor: "#ddd",
+    marginTop: -10,
+    width: "100%",
+  },
+  contentArea: {
+    flex: 1,
+    width: "100%",
+    paddingTop: 10, // Optional: Add space between the content and the tabs
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  contentTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  contentText: {
+    fontSize: 16,
+    color: "#555",
+  },
+  selectedDateContainer: {
+    padding: 20,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+  },
+  selectedDateText: {
+    fontSize: 16,
+    color: "#333",
+  },
+});
+export default MyScreen;

@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "sportsconnectapp",
+    "slug": "sportsconnectapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "main": "./App.js",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      
+      "jsEngine": "hermes"
+    },
+    "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library to select images."
+      },
+    
+      "bundleIdentifier": "com.yourname.sportsconnect"
+    },
+    "android": {
+      "versionCode": 1,
+      "package": "com.yourname.sportsconnect",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff",
+        "newArchEnabled": true
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "web": {
+        "bundler": "metro"
+      }
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c955bd3f-bad4-4ada-add6-fd730d3362bd"
+      }
+    }
+  }
+}
